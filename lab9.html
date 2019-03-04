@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"> 
+  <head>
+    <title>Dice Game</title>
+    <link href="lab9.css" type="text/css" rel="stylesheet" /> 
+  </head>
+  <body>
+  
+    <div id='human' class='playerArea'>
+      <h3>Human</h3>
+      <div id='humanDice'>
+
+      </div>
+      <p id='humanTotal' class='total'></p>
+      <p id='hTotal'></p>
+      <p id='winner'></p>
+    </div>
+    
+    <div id='computer' class='playerArea'>
+      <h3>Computer</h3>
+      <div id='computerDice'>
+
+      </div>
+      <p id='computerTotal' class='total'></p>
+      <p id='cTotal'></p>
+    </div>
+    
+    <div id='roll'>
+      <a href='#' onclick='play(); return false;'>Roll</a>
+  </div>
+
+    <div id = 'stand'>
+	<a href='#' onclick='calcWinner();'>Stand</a>
+    </div>
+    
+    <script type='text/javascript' src='lib.js'></script>
+    <script type='text/javascript'>
+    /* 
+       This executes one roll for human and computer 
+       The homework needs to implement 6 dice being rolled at once.
+       To implement this, consider using an array for humanDice and 
+       computerDice which could hold multiple values, and a for loop.
+       For each roll, 6 total, have humanDice[i] = roll(); Still within 
+       the for loop, update the running total of humanTotal 
+       (humanTotal += humanDice[i])
+
+       The same will be done for the computer, except that the style.visibility
+       of the computerDice and computerTotal will be set to hidden until we 
+       calculate the winner.
+
+       Once the user hits the 'stand' button, we must calcWinner
+       Use the global variables finalHumanScore/ finalComputerScore
+       to compare with a series of 
+       logical expressions and if statements will compare the two values.
+       for the homework, firstly we should look to see if you and/or the 
+       computer busted (greater than 100), if both values are under a 100, 
+       then we compare whether hScore or cScore is greater.
+     */
+    
+    //Global Values
+    var finalHumanScore = 0;
+    var finalComputerScore = 0;
+
+	function roll() {
+	    return( Math.floor(Math.random() * 6 + 1));
+	}
+
+	function displayDice(dice) {
+  		var out = "";
+  		for (var i = 0; i < dice.length; i++) {
+ 		   out +=  dice[i];
+  		}
+ 		return out;
+	}
+
+	function play() {
+		document.getElementById('computerDice').style.visibility = "hidden";
+		document.getElementById('computerTotal').style.visibility = "hidden";
+
+	    document.getElementById('winner').innerHTML = "";
+	    var humanDice = new Array();		//Holds the dice value (1-6)
+	    var humanTotal = 0;		//Running total of dice value
+	    
+	    var computerDice = new Array();	//Holds the dice value (1-6)
+	    var computerTotal = 0;	//Running total of dice value
+
+	    var out = "";		//output string containing dice img
+
+	    //Human roll + computer roll
+        for(var i=0; i<6; i++) {
+	      humanDice[i] = roll();		//get a random num (1-6)
+	      humanTotal += humanDice[i];	//update the running total
+		  //Computer roll
+	      computerDice[i] = roll();
+	      computerTotal += computerDice[i];
+  		}
+
+	    //display human dice and total
+	    out = displayDice(humanDice);
+	    document.getElementById('humanDice').innerHTML = out;
+	    document.getElementById('humanTotal').innerHTML = humanTotal;
+		
+	    //display computer dice and total
+	    out = displayDice(computerDice);
+	    document.getElementById('computerDice').innerHTML = out;
+	    document.getElementById('computerTotal').innerHTML = computerTotal;
+
+	    //update global variables
+	    finalHumanScore += humanTotal;
+	    finalComputerScore += computerTotal;
+		
+		//display human running total
+		document.getElementById('winner').innerHTML = finalHumanScore;
+	}
+
+	function calcWinner() {
+	    var hScore = finalHumanScore;
+	    var cScore = finalComputerScore;
+		//Display scores
+	    document.getElementById('humanTotal').innerHTML = hScore;
+	    document.getElementById('computerTotal').innerHTML = cScore;
+		document.getElementById('computerDice').style.visibility = "visible";
+		document.getElementById('computerTotal').style.visibility = "visible";
+		
+		if(hScore <= 100 && cScore <= 100) {	//You Both are UNDER 100
+			if(hScore > cScore) // you WIN
+				document.getElementById('winner').innerHTML = "You Win!";
+			else if(cScore > hScore)
+ 				document.getElementById('winner').innerHTML = "You Lose!";
+			else if(hScore == hScore) 
+				document.getElementById('winner').innerHTML = "Tie!";
+  		}
+
+	    else if(hScore > 100 && cScore > 100) {	//You both BUSTED
+			document.getElementById('winner').innerHTML = "Tie!";
+	    }
+	    else if(cScore > 100 && hScore <= 100) { //The computer BUSTED
+			document.getElementById('winner').innerHTML = "You Win!";
+	    }
+	    else if(hScore > 100 && cScore <= 100) { //You BUSTED
+			document.getElementById('winner').innerHTML = "You Lose!";
+	    }
+	    //reset global scores
+	    finalHumanScore = 0;
+	    finalComputerScore = 0;
+	}
+    </script>
+  </body>
+</html>   
+
+
